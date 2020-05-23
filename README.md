@@ -1,10 +1,11 @@
-## Wallect Service 🚀
+## Wallet Service 🚀
 Updates wallet balance when a selected service is bought.
 
 ### Installation
 Not required. Exposed API endpoint
 
-## POST  `http://wallet-service.apps.us-east-1.starter.openshift-online.com/api/buy/`
+### Post  
+#### `http://wallet-service.apps.us-east-1.starter.openshift-online.com/api/buy/`
 
 This method takes discount percentage and original service cost in request body and JWT in request header. Depending on the input, the user is authenticated using JWT and the wallet balance is updated using the parameters in request bodyt(only if the conditions are met or else suitable error will be sent).
 
