@@ -66,8 +66,10 @@ function updatebalance(connection, serviceCharge, user, result, res) {
   let tempDep = 0;
   bonus = tempBonus >= 0 ? tempBonus : 0;
   if (bonus < 0) {
-    tempServiceCharge += Math.abs(tempDep);
+    tempServiceCharge += (0.9* tempServiceCharge + Math.abs(tempDep));
     bonus = 0;
+  } else {
+    tempServiceCharge -= (0.1*tempServiceCharge);
   }
   if (deposit >= tempServiceCharge) {
     //If whole fee can be recovered using deposit plus bonus money
