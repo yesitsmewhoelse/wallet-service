@@ -66,10 +66,11 @@ function updatebalance(connection, serviceCharge, user, result, res) {
 
   bonus = tempBonus >= 0 ? tempBonus : 0;
   if (tempBonus < 0) {
-    tempServiceCharge = +(0.9* tempServiceCharge + Math.abs(tempBonus)).toFixed(2);
+    tempServiceCharge = (+(0.9* tempServiceCharge + Math.abs(tempBonus)).toFixed(2));
     bonus = 0;
   } else {
-    tempServiceCharge -= +(0.1*tempServiceCharge).toFixed(2);
+    tempServiceCharge -= 0.1*tempServiceCharge;
+    tempServiceCharge = +tempServiceCharge.toFixed(2); 
   }
 
   if (deposit >= tempServiceCharge) {
@@ -77,7 +78,8 @@ function updatebalance(connection, serviceCharge, user, result, res) {
     deposit -= tempServiceCharge;
   } else {
     tempServiceCharge -= deposit;
-    winnings -= tempServiceCharge;
+    winnings = +(winnings - (+tempServiceCharge.toFixed(2))).toFixed(2);
+    console.log(winnings);
     deposit = 0;
   }
 
