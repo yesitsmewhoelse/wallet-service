@@ -27,7 +27,7 @@ function authenticate(req, res) {
     const decoded = jwt.verify(token, "secret");
     return decoded.user;
   } catch (e) {
-    res.send("Invalid Token");
+    return es.send("Invalid Token");
   }
 }
 
@@ -37,7 +37,7 @@ exports.buy = async function (req, res) {
 
   if (!discount || !service) {
     //Rejecting request if complete infromation is not there. Validations on the correctness of data can also be added
-    res.send("Invalid Body");
+    return res.send("Invalid Body");
   }
   const serviceCharge = ((100 - discount) / 100) * service;
   const user = authenticate(req, res);
@@ -56,20 +56,22 @@ exports.buy = async function (req, res) {
 
 function updatebalance(connection, serviceCharge, user, result, res) {
   let { bonus, deposit, winnings } = result[0];
+
   if ((deposit + winnings + 0.1*bonus) < serviceCharge) {
-    res.send("Insufficient Ballance");
+    return res.send("Insufficient Balance");
   }
 
   let tempServiceCharge = serviceCharge
   const tempBonus = bonus - 0.1 * tempServiceCharge;
-  let tempDep = 0;
+
   bonus = tempBonus >= 0 ? tempBonus : 0;
-  if (bonus < 0) {
-    tempServiceCharge = (0.9* tempServiceCharge + Math.abs(tempDep));
+  if (tempBonus < 0) {
+    tempServiceCharge = (0.9* tempServiceCharge + Math.abs(tempBonus));
     bonus = 0;
   } else {
     tempServiceCharge -= (0.1*tempServiceCharge);
   }
+  console.log(tempServiceCharge);
   if (deposit >= tempServiceCharge) {
     //If whole fee can be recovered using deposit plus bonus money
     deposit -= tempServiceCharge;
