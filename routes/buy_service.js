@@ -50,7 +50,14 @@ exports.buy = async function (req, res) {
       updatebalance(connection, serviceCharge, user, result, res);
     }
   });
-};
+  connection.on('error', function(err) {
+    //- Fatal error : connection variable must be recreated
+    if(err.code === "PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR"){
+        console.log("/!\\ Cannot establish a connection with the database. /!\\ ("+err.code+")");
+        connection = reconnect(connection);
+    }
+  });
+}
 
 /* Function to update user wallet details */
 
@@ -97,5 +104,32 @@ function updatebalance(connection, serviceCharge, user, result, res) {
         "Updated Balance": balance,
       });
     }
+  });
+}
+
+function reconnect(connection){
+  console.log("\n New connection tentative...");
+
+  //- Destroy the current connection variable
+  if(connection) connection.destroy();
+
+  //- Create a new one
+  var connection = mysql.createConnection({
+    //Database connection
+    host: "db4free.net",
+    user: "yesitsmewhoelse",
+    password: "9910723368",
+    database: "assignment_backe",
+  });
+
+  //- Try to reconnect
+  connection.connect(function(err){
+      if(err) {
+          //- Try to connect every 2 seconds.
+          setTimeout(reconnect, 2000);
+      }else {
+          console.log("\n\t *** New connection established with the database. ***")
+          return connection;
+      }
   });
 }
