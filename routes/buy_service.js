@@ -65,7 +65,7 @@ function updatebalance(connection, serviceCharge, user, result, res) {
   let tempDep = 0;
 
   bonus = tempBonus >= 0 ? tempBonus : 0;
-  if (!bonus) {
+  if (bonus < 0) {
     tempDep = Math.abs(tempBonus);
     bonus = 0;
   }
