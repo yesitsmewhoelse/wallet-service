@@ -1,20 +1,6 @@
 const mysql = require("mysql");
 const jwt = require("jsonwebtoken");
 
-var connection = mysql.createConnection({
-  //Database connection
-  host: "db4free.net",
-  user: "yesitsmewhoelse",
-  password: "9910723368",
-  database: "assignment_backe",
-});
-
-connection.connect(function (err) {
-  if (err) {
-    res.send("Cannot Connect");
-  }
-});
-
 /* Getting the logged in user's username from JWT by passing dummy jwt in headers */
 
 function authenticate(req, res) {
@@ -32,6 +18,7 @@ function authenticate(req, res) {
 }
 
 exports.buy = async function (req, res) {
+  const user = authenticate(req, res);
   const discount = parseInt(req.body.discount);
   const service = parseInt(req.body.service);
 
@@ -40,7 +27,20 @@ exports.buy = async function (req, res) {
     return res.send("Invalid Body");
   }
   const serviceCharge = ((100 - discount) / 100) * service;
-  const user = authenticate(req, res);
+
+  var connection = mysql.createConnection({
+    //Database connection
+    host: "db4free.net",
+    user: "yesitsmewhoelse",
+    password: "9910723368",
+    database: "assignment_backe",
+  });
+  
+  connection.connect(function (err) {
+    if (err) {
+      res.send("Cannot Connect");
+    }
+  });
 
   var sql = `SELECT bonus,deposit,winnings FROM wallet WHERE username = '${user}'`;
   connection.query(sql, function (error, result) {
@@ -91,6 +91,7 @@ function updatebalance(connection, serviceCharge, user, result, res) {
       console.log(error);
       res.send(error);
     } else {
+      connection.end();
       res.send({
         status: "Success",
         "Updated Balance": balance,
