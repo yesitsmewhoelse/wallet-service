@@ -64,20 +64,20 @@ function updatebalance(connection, serviceCharge, user, result, res) {
   let tempServiceCharge = serviceCharge
   const tempBonus = bonus - 0.1 * tempServiceCharge;
 
-  bonus = tempBonus >= 0 ? tempBonus : 0;
+  bonus = tempBonus >= 0 ? +tempBonus.toFixed(2) : 0;
   if (tempBonus < 0) {
-    tempServiceCharge = (0.9* tempServiceCharge + Math.abs(tempBonus));
+    tempServiceCharge = +(0.9* tempServiceCharge + Math.abs(tempBonus)).toFixed(2);
     bonus = 0;
   } else {
-    tempServiceCharge -= (0.1*tempServiceCharge);
+    tempServiceCharge -= +(0.1*tempServiceCharge).toFixed(2);
   }
 
   if (deposit >= tempServiceCharge) {
     //If whole fee can be recovered using deposit plus bonus money
-    deposit -= tempServiceCharge;
+    deposit -= +tempServiceCharge.toFixed(2);
   } else {
     tempServiceCharge -= deposit;
-    winnings -= tempServiceCharge;
+    winnings -= +tempServiceCharge.toFixed(2);
     deposit = 0;
   }
 
