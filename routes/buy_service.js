@@ -45,6 +45,7 @@ exports.buy = async function (req, res) {
   var sql = `SELECT bonus,deposit,winnings FROM wallet WHERE username = '${user}'`;
   connection.query(sql, function (error, result) {
     if (error) {
+      connection.end();
       res.send(error);
     } else {
       updatebalance(connection, serviceCharge, user, result, res);
@@ -58,6 +59,7 @@ function updatebalance(connection, serviceCharge, user, result, res) {
   let { bonus, deposit, winnings } = result[0];
 
   if ((deposit + winnings + 0.1*bonus) < serviceCharge) {
+    connection.end();
     return res.send("Insufficient Balance");
   }
 
@@ -88,7 +90,7 @@ function updatebalance(connection, serviceCharge, user, result, res) {
   var sql = `UPDATE wallet SET bonus = ${bonus}, deposit = ${deposit}, winnings = ${winnings} WHERE username = '${user}'`;
   connection.query(sql, function (error) {
     if (error) {
-      console.log(error);
+      connection.end();
       res.send(error);
     } else {
       connection.end();
