@@ -56,8 +56,7 @@ exports.buy = async function (req, res) {
 
 function updatebalance(connection, serviceCharge, user, result, res) {
   let { bonus, deposit, winnings } = result[0];
-  let balance = bonus + deposit + winnings;
-  if (balance < serviceCharge) {
+  if ((deposit + winnings + 0.1*bonus) < serviceCharge) {
     res.send("Insufficient Ballance");
   }
 
@@ -75,11 +74,13 @@ function updatebalance(connection, serviceCharge, user, result, res) {
     //If whole fee can be recovered using deposit plus bonus money
     deposit -= tempServiceCharge;
   } else {
-    winnings -= (tempServiceCharge - deposit);
+    tempServiceCharge -= deposit;
+    winnings -= tempServiceCharge;
     deposit = 0;
   }
 
-  balance -= serviceCharge;
+  const balance = deposit + winnings + bonus;
+
   var sql = `UPDATE wallet SET bonus = ${bonus}, deposit = ${deposit}, winnings = ${winnings} WHERE username = '${user}'`;
   connection.query(sql, function (error) {
     if (error) {
