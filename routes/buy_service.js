@@ -71,7 +71,7 @@ function updatebalance(connection, serviceCharge, user, result, res) {
   } else {
     tempServiceCharge -= (0.1*tempServiceCharge);
   }
-  console.log(tempServiceCharge);
+
   if (deposit >= tempServiceCharge) {
     //If whole fee can be recovered using deposit plus bonus money
     deposit -= tempServiceCharge;
