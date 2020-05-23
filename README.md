@@ -5,7 +5,7 @@ Updates wallet balance when a selected service is bought.
 Not required. Exposed API endpoint
 
 ### Post  
-#### `http://wallet-service.apps.us-east-1.starter.openshift-online.com/api/buy/`
+#### `http://wallet-service-api-wallet.apps.us-east-1.starter.openshift-online.com/api/buy/`
 
 This method takes discount percentage and original service cost in request body and JWT in request header. Depending on the input, the user is authenticated using JWT and the wallet balance is updated using the parameters in request bodyt(only if the conditions are met or else suitable error will be sent).
 
@@ -40,7 +40,7 @@ token|String|JWT token for user authentication.
 ### Sample Curl request
 
 ```
-curl --location --request POST 'http://wallet-service.apps.us-east-1.starter.openshift-online.com/api/buy/' \
+curl --location --request POST 'http://wallet-service-api-wallet.apps.us-east-1.starter.openshift-online.com' \
 --header 'token: ' \
 --data-raw '{
 "discount": "",
