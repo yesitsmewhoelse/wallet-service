@@ -61,19 +61,19 @@ function updatebalance(connection, serviceCharge, user, result, res) {
     res.send("Insufficient Ballance");
   }
 
-  const tempBonus = bonus - 0.1 * serviceCharge;
+  let tempServiceCharge = serviceCharge
+  const tempBonus = bonus - 0.1 * tempServiceCharge;
   let tempDep = 0;
-
   bonus = tempBonus >= 0 ? tempBonus : 0;
   if (bonus < 0) {
-    tempDep = Math.abs(tempBonus);
+    tempServiceCharge += Math.abs(tempDep);
     bonus = 0;
   }
-  if (deposit >= tempDep + 0.9 * serviceCharge) {
+  if (deposit >= tempServiceCharge) {
     //If whole fee can be recovered using deposit plus bonus money
-    deposit -= tempDep + 0.9 * serviceCharge;
+    deposit -= tempServiceCharge;
   } else {
-    winnings -= 0.9 * serviceCharge - (tempDep + deposit);
+    winnings -= (tempServiceCharge - deposit);
     deposit = 0;
   }
 
