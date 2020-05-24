@@ -50,3 +50,11 @@ curl --location --request POST 'http://wallet-service-api-wallet.apps.us-east-1.
 **returns**|**description**
 -----|-----
 *|Request status according to internal conditions.
+
+### GET 
+#### `http://wallet-service-api-wallet.apps.us-east-1.starter.openshift-online.com/api/health/`
+
+**returns**|**description**
+-----|-----
+*|Request status of the API.
+

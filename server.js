@@ -15,7 +15,11 @@ app.use(function (req, res, next) {
 
 var ip = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || "0.0.0.0";
 var router = express.Router();
+
 router.post("/buy", service.buy);
+router.get("/health", function(req, res) {
+    res.send({service: "Healthy"});
+});
 
 app.use("/api", router);
 app.listen(8080, ip);
