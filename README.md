@@ -40,7 +40,7 @@ token|String|JWT token for user authentication.
 ### Sample Curl request
 
 ```
-curl --location --request POST 'http://wallet-service-api-wallet.apps.us-east-1.starter.openshift-online.com' \
+curl --location --request POST 'http://wallet-service-api-wallet.apps.us-east-1.starter.openshift-online.com/api/buy' \
 --header 'token: ' \
 --data-raw '{
 "discount": "",
