@@ -56,5 +56,5 @@ curl --location --request POST 'http://wallet-service-api-wallet.apps.us-east-1.
 
 **returns**|**description**
 -----|-----
-*|Request status of the API.
+Object|Health of the service.
 
