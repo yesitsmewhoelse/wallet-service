@@ -16,7 +16,7 @@ service|String| Service fee.
 
 **Req.headers**|**type**|**description**
 -----|-----|-----
-token|String|JWT token for user authentication.
+token|String|JWT for user authentication.
 
 ## For validation using Postman : 
 
