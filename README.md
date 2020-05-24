@@ -20,7 +20,7 @@ token|String|JWT for user authentication.
 
 ## For validation using Postman : 
 
-## Sample request body           
+### Sample request body           
 
 ```
  {
@@ -29,7 +29,7 @@ token|String|JWT for user authentication.
  }
  ```
 
-## Sample request header           
+### Sample request header           
 
 ```
  {
