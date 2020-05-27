@@ -18,14 +18,14 @@ function authenticate(req, res) {
 }
 
 exports.buy = async function (req, res) {
+  if (req.body.discount == null || req.body.service == null) {
+    //Rejecting request if complete infromation is not there. Validations on the correctness of data can also be added
+    return res.send("Invalid Body");
+  }
   const user = authenticate(req, res);
   const discount = parseInt(req.body.discount);
   const service = parseInt(req.body.service);
 
-  if (!discount || !service) {
-    //Rejecting request if complete infromation is not there. Validations on the correctness of data can also be added
-    return res.send("Invalid Body");
-  }
   const serviceCharge = ((100 - discount) / 100) * service;
 
   var connection = mysql.createConnection({
@@ -35,10 +35,10 @@ exports.buy = async function (req, res) {
     password: "9910723368",
     database: "assignment_backe",
   });
-  
+
   connection.connect(function (err) {
     if (err) {
-      res.send("Cannot Connect");
+      return res.send("Cannot Connect");
     }
   });
 
@@ -46,33 +46,36 @@ exports.buy = async function (req, res) {
   connection.query(sql, function (error, result) {
     if (error) {
       connection.end();
-      res.send(error);
+      return res.send(error);
     } else {
       updatebalance(connection, serviceCharge, user, result, res);
     }
   });
-}
+};
 
 /* Function to update user wallet details */
 
 function updatebalance(connection, serviceCharge, user, result, res) {
   let { bonus, deposit, winnings } = result[0];
 
-  if ((deposit + winnings + 0.1*bonus) < serviceCharge) {
+  if (deposit + winnings + 0.1 * bonus < serviceCharge) {
     connection.end();
     return res.send("Insufficient Balance");
   }
 
-  let tempServiceCharge = serviceCharge
-  const tempBonus = bonus - (+(0.1 * tempServiceCharge).toFixed(2));
+  let tempServiceCharge = serviceCharge;
+  const tempBonus = bonus - +(0.1 * tempServiceCharge).toFixed(2);
 
   bonus = tempBonus >= 0 ? tempBonus : 0;
   if (tempBonus < 0) {
-    tempServiceCharge = (+(0.9* tempServiceCharge + Math.abs(tempBonus)).toFixed(2));
+    tempServiceCharge = +(
+      0.9 * tempServiceCharge +
+      Math.abs(tempBonus)
+    ).toFixed(2);
     bonus = 0;
   } else {
-    tempServiceCharge -= 0.1*tempServiceCharge;
-    tempServiceCharge = +tempServiceCharge.toFixed(2); 
+    tempServiceCharge -= 0.1 * tempServiceCharge;
+    tempServiceCharge = +tempServiceCharge.toFixed(2);
   }
 
   if (deposit >= tempServiceCharge) {
@@ -80,7 +83,7 @@ function updatebalance(connection, serviceCharge, user, result, res) {
     deposit -= tempServiceCharge;
   } else {
     tempServiceCharge -= deposit;
-    winnings = +(winnings - (+tempServiceCharge.toFixed(2))).toFixed(2);
+    winnings = +(winnings - +tempServiceCharge.toFixed(2)).toFixed(2);
     console.log(winnings);
     deposit = 0;
   }
